@@ -31,17 +31,17 @@ def lstm_layer(num_timesteps: int, num_inputs: int, num_units: int,
 
     U_shape = [num_inputs + num_units, num_units]
     b_shape = [1, num_units]
-    Ug = tf.Variable(init(U_shape))
-    bg = tf.Variable(bias_init(b_shape))
+    Ug = tf.Variable(init(U_shape), name="Ug")
+    bg = tf.Variable(bias_init(b_shape), name="bg")
 
-    Ui = tf.Variable(init(U_shape))
-    bi = tf.Variable(bias_init(b_shape))
+    Ui = tf.Variable(init(U_shape), name="Ui")
+    bi = tf.Variable(bias_init(b_shape), name="bi")
 
-    Uf = tf.Variable(init(U_shape))
-    bf = tf.Variable(bias_init(b_shape) + tf.ones(b_shape))
+    Uf = tf.Variable(init(U_shape), name="Uf")
+    bf = tf.Variable(bias_init(b_shape) + tf.ones(b_shape), name="bf")
 
-    Uo = tf.Variable(init(U_shape))
-    bo = tf.Variable(bias_init(b_shape))
+    Uo = tf.Variable(init(U_shape), name="Uo")
+    bo = tf.Variable(bias_init(b_shape), name="bo")
 
     def cell(x_t, s_t, h_t):
         xh_t = tf.concat([x_t, h_t], 1)
@@ -73,8 +73,8 @@ def lstm_and_dense_layer(num_timesteps: int, num_inputs: int, num_classes: int, 
     """
     Use `model` with `num_hidden` LSTM units, translate them `num_classes` classes using a dense layer.
     """
-    W = tf.Variable(dense_init([num_hidden, num_classes]))
-    b = tf.Variable(dense_init([1, num_classes]))
+    W = tf.Variable(dense_init([num_hidden, num_classes]), name="W")
+    b = tf.Variable(dense_init([1, num_classes]), name="b")
 
     X, outputs = lstm_layer(num_timesteps, num_inputs, num_units=num_hidden)
     cls = tf.matmul(outputs[-1], W) + b
@@ -108,7 +108,7 @@ def train(Xl, yl, Xt, yt):
     num_inputs = Xl.shape[1] # length of each row
     num_hidden = 128
     num_classes = yl.shape[1]
-    training_steps = 500 # TODO temporary to make faster, 10000 to actually train
+    training_steps = 3000 # TODO temporary to make faster, 10000 to actually train
     learning_rate = 0.001
     num_examples = Xl.shape[0]
     with tf.Session(graph=tf.Graph()) as sess:
@@ -158,10 +158,24 @@ def train(Xl, yl, Xt, yt):
         print("Testing Accuracy:",
             sess.run(accuracy_op, feed_dict={X: Xt, y: yt}))
 
-        save_model = False
+        save_model = True
         if save_model:
             print("Saving the model")
-            simple_save(sess, export_dir='./lstm', inputs={"images":X}, outputs={"out":prediction})
+            save_vars()
+            # simple_save(sess, export_dir='./lstm', inputs={"images":X}, outputs={"out":prediction})
+
+
+_file = "/tmp/lstm_vars.npz"
+
+
+def save_vars():
+    all_vars = {var.name: var.eval() for var in tf.global_variables()}
+    np.savez(_file, **all_vars)
+
+
+def read_vars():
+    with np.load(_file) as npz:
+        return {name.split(":")[0]: npz[name] for name in npz.files}
 
 
 if __name__ == '__main__':
