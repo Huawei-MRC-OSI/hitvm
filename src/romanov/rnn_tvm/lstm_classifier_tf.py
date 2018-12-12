@@ -4,10 +4,10 @@ Poor man's LSTM cell applied to MNIST. Use `train` function to train the model.
 
 import tensorflow as tf
 import numpy as np
+import os
 
 from keras.datasets import mnist
 from tensorflow.python.ops import variables
-from tensorflow.python.saved_model.simple_save import simple_save
 
 def lstm_gate(op, U, b, x):
     """
@@ -174,10 +174,26 @@ def save_vars():
 
 
 def read_vars():
+    def transform_for_dense(name, array):
+        if name.startswith(("U", "W")):
+            return np.transpose(array)
+        elif name.startswith("b"):
+            return np.squeeze(array)
+        else:
+            return array
+
+    if not os.path.exists(_file):
+        train_mnist()
+
     with np.load(_file) as npz:
-        return {name.split(":")[0]: npz[name] for name in npz.files}
+        return {name.split(":")[0]: transform_for_dense(name, npz[name])
+                for name in npz.files}
+
+
+def train_mnist():
+    (Xl, yl), (Xt, yt) = mnist_load()
+    train(Xl, yl, Xt, yt)
 
 
 if __name__ == '__main__':
-    (Xl, yl), (Xt, yt) = mnist_load()
-    train(Xl, yl, Xt, yt)
+    train_mnist()

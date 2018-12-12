@@ -30,7 +30,7 @@ def Variable(name, **kwargs):
 # (division by 0)
 _batch_size = 10000
 
-def lstm_gate(op, U, b, x):
+def lstm_gate(op, U, b, x, num_units):
     """
     op - nonlinearity operation
     x - input tensor of shape (1,a)
@@ -39,7 +39,7 @@ def lstm_gate(op, U, b, x):
 
     return tensor of shape (1,b)
     """
-    return op(sym.matmul(x, U) + b)
+    return op(sym.dense(x, U, b, units=num_units))
 
 
 def glorot_uniform(shape):
@@ -74,10 +74,10 @@ def lstm_layer(num_timesteps: int, num_inputs: int, num_units: int,
 
     def cell(x_t, s_t, h_t):
         xh_t = sym.concatenate(x_t, h_t, axis=1)
-        g = lstm_gate(sym.tanh, Ug, bg, xh_t)
-        i = lstm_gate(sym.sigmoid, Ui, bi, xh_t)
-        f = lstm_gate(sym.sigmoid, Uf, bf, xh_t)
-        o = lstm_gate(sym.sigmoid, Uo, bo, xh_t)
+        g = lstm_gate(sym.tanh, Ug, bg, xh_t, num_units)
+        i = lstm_gate(sym.sigmoid, Ui, bi, xh_t, num_units)
+        f = lstm_gate(sym.sigmoid, Uf, bf, xh_t, num_units)
+        o = lstm_gate(sym.sigmoid, Uo, bo, xh_t, num_units)
 
         s_t1 = s_t * f + g * i
         h_t1 = sym.tanh(s_t1) * o
@@ -116,7 +116,7 @@ def lstm_and_dense_layer(num_timesteps: int, num_inputs: int, num_classes: int, 
     b = Variable("b", init=dense_init(size=[1, num_classes]))
 
     X, outputs = lstm_layer(num_timesteps, num_inputs, num_units=num_hidden)
-    cls = sym.matmul(outputs[-1], W) + b
+    cls = sym.dense(outputs[-1], W, b, units=num_classes)
     return X, cls
 
 
@@ -185,7 +185,6 @@ def run(Xl, yl, Xt, yt):
     :param Xt test examples tensor, shape [num_examples, num_inputs, num_timesteps]
     :param yt one-hot encoded test labels tensor, shape [num_examples, num_classes]
     """
-    batch_size = 64
     num_timesteps = Xl.shape[2] # number of rows (each row in the image is considered as a timestep)
     num_inputs = Xl.shape[1] # length of each row
     num_hidden = 128
@@ -210,15 +209,23 @@ def run(Xl, yl, Xt, yt):
         graph = nnvm.compiler.graph_attr.set_shape_inputs(graph, shape_dict)
         graph = nnvm.compiler.graph_attr.set_dtype_inputs(graph, dtype_dict)
         graph = graph.apply('InferShape').apply('InferType')
-        print("Initial NNVM graph", graph.ir(join_node_attrs=['shape','dtype']))
+        # print("Initial NNVM graph", graph.ir(join_node_attrs=['shape','dtype']))
 
         lowered_graph, libmod, params = nnvm.compiler.build(graph=graph, params=_var_values, target='llvm')
         # print("Lowered NNVM graph", lowered_graph.ir()) # join_node_attrs doesn't work here
         graph_module = graph_runtime.create(lowered_graph, libmod, tvm.cpu(0))
-        graph_module.set_input(**params)
-        graph_module.run(X=Xt, y=yt)
-        accuracy_value = graph_module.get_output(0)
-        print("Testing Accuracy:", accuracy_value)
+        graph_module.set_input(X=Xt, y=yt, **params)
+
+        eval_time = True
+
+        if eval_time:
+            ftimer = graph_module.module.time_evaluator("run", tvm.cpu(0), number=2, repeat=3)
+            prof_res = np.array(ftimer().results) * 1000  # convert to millisecond
+            print(f"Mean inference time (std dev): {np.mean(prof_res):.2f} ms ({np.std(prof_res):.2f} ms)")
+        else:
+            graph_module.run()
+            accuracy_value = graph_module.get_output(0)
+            print("Testing Accuracy:", accuracy_value)
 
 
     else:
