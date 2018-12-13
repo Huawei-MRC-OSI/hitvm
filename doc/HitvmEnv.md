@@ -171,3 +171,46 @@ Debugging python scripts
  
         $ gdb  --args `which python3.6` lstm2.py
 
+AddressSanitizer (aka ASan) for TVM
+-----------------------------------
+1. Instrument libtvm with ASan.
+    
+    ```bash
+    $ export CFLAGS='-fsanitize=address -g -fno-omit-frame-pointer'
+    $ export CXXFLAGS='-fsanitize=address -g -fno-omit-frame-pointer'
+    $ cmake -DUSE_LLVM=ON path/to/tvm
+    $ make -j32
+    ```
+
+2. Preload libasan. 
+
+    ```bash 
+    $ export LD_PRELOAD=/path/to/libasan.so
+    ```
+    
+3. Run your program.
+    
+    ```bash
+    $ python3 tvm_model.py
+    ```
+    
+    Official documentation 
+    `https://github.com/google/sanitizers/wiki/AddressSanitizer`
+ 
+   
+TVM profiling
+--------------
+1. Callgrind from Valgrind.
+ 
+    To get a better callgraph rebuild libtvm.so with `-00` in other way
+    your compiler can inline some functions.
+
+    ```bash
+    $valgrind --tool=callgrind python3 lstm.py
+    $kcachegrind callgrind.out.number
+    ```
+    
+    Official documentation http://valgrind.org/docs/manual/cl-manual.html
+    
+
+
