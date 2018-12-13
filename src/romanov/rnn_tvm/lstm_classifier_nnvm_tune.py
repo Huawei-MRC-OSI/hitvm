@@ -13,7 +13,7 @@ import nnvm.compiler
 import tvm
 from tvm import autotvm
 from tvm.autotvm.tuner import XGBTuner, GATuner, RandomTuner, GridSearchTuner
-import tvm.contrib.graph_runtime as runtime
+from tvm.contrib import graph_runtime
 
 
 #################################################################
@@ -127,39 +127,56 @@ def tune_kernels(tasks,
 def tune_and_evaluate(**tuning_opt):
     # extract workloads from nnvm graph
     print("Extract tasks...")
-    net, params, shape_dict, dtype_dict = get_network()
-    # TODO determine important tasks to extract
-    tasks = autotvm.task.extract_from_graph(net, target=target,
-                                            shape=shape_dict, dtype=dtype_dict,
-                                            symbols=(nnvm.sym.dense,))
-    print("Extracted tasks", tasks)
+    graph, params, shape_dict, dtype_dict = get_network()
 
-    # run tuning tasks
-    print("Tuning...")
-    tune_kernels(tasks, **tuning_opt)
+    # FIXME wtf, how is inference time here different from lstm_classifier_nnvm???
+    # After fixing, apply to commented out code below
+    lowered_graph, libmod, params = nnvm.compiler.build(graph=graph, params=_var_values, target='llvm')
+    print("Lowered NNVM graph", lowered_graph.ir())  # join_node_attrs doesn't work here
+    graph_module = graph_runtime.create(lowered_graph, libmod, tvm.cpu(0))
+    Xt = tvm.nd.array((np.random.uniform(size=shape_dict['X'])).astype(dtype))
+    graph_module.set_input(X=Xt, **params)
 
-    # compile kernels with history best records
-    # with autotvm.FallbackContext():
-    with autotvm.apply_history_best(log_file):
-        print("Compile...")
-        with nnvm.compiler.build_config(opt_level=3):
-            graph, lib, params = nnvm.compiler.build(
-                net, target=target, shape=shape_dict, params=params, dtype=dtype_dict)
+    eval_time = True
 
-        # upload parameters to device
-        ctx = tvm.cpu()
-        input_name = 'X'
-        data_tvm = tvm.nd.array((np.random.uniform(size=shape_dict[input_name])).astype(dtype))
-        module = runtime.create(graph, lib, ctx)
-        module.set_input(input_name, data_tvm)
-        module.set_input(**params)
-
-        # evaluate
-        print("Evaluate inference time cost...")
-        # TODO number=1, repeat=1 is temporary because tuning badly fails and slows down NNVM at the moment
-        ftimer = module.module.time_evaluator("run", ctx, number=1, repeat=1)  # number=2, repeat=3)
+    if eval_time:
+        ftimer = graph_module.module.time_evaluator("run", tvm.cpu(0), number=1, repeat=1)
         prof_res = np.array(ftimer().results) * 1000  # convert to millisecond
         print(f"Mean inference time (std dev): {np.mean(prof_res):.2f} ms ({np.std(prof_res):.2f} ms)")
+
+    # print("Initial NNVM graph", graph.ir(join_node_attrs=['shape', 'dtype']))
+    # # TODO determine important tasks to extract
+    # tasks = autotvm.task.extract_from_graph(graph, target=target,
+    #                                         shape=shape_dict, dtype=dtype_dict,
+    #                                         symbols=(nnvm.sym.dense,))
+    # print("Extracted tasks", tasks)
+    #
+    # # run tuning tasks
+    # print("Tuning...")
+    # tune_kernels(tasks, **tuning_opt)
+    #
+    # # compile kernels with history best records
+    # with autotvm.apply_history_best(log_file):
+    #     print("Compile...")
+    #     with nnvm.compiler.build_config(): #opt_level=3):
+    #         lowered_graph, lib, params = nnvm.compiler.build(
+    #             graph, target=target, shape=shape_dict, params=params, dtype=dtype_dict)
+    #         print("Lowered NNVM graph", lowered_graph.ir())
+    #
+    #     # upload parameters to device
+    #     ctx = tvm.cpu(0)
+    #     input_name = 'X'
+    #     data_tvm = tvm.nd.array((np.random.uniform(size=shape_dict[input_name])).astype(dtype))
+    #     module = graph_runtime.create(lowered_graph, lib, ctx)
+    #     module.set_input(input_name, data_tvm)
+    #     module.set_input(**params)
+    #
+    #     # evaluate
+    #     print("Evaluate inference time cost...")
+    #     # TODO number=1, repeat=1 is temporary because tuning badly fails and slows down NNVM at the moment
+    #     ftimer = module.module.time_evaluator("run", ctx, number=1, repeat=1)  # number=2, repeat=3)
+    #     prof_res = np.array(ftimer().results) * 1000  # convert to millisecond
+    #     print(f"Mean inference time (std dev): {np.mean(prof_res):.2f} ms ({np.std(prof_res):.2f} ms)")
 
 
 # We do not run the tuning in our webpage server since it takes too long.
