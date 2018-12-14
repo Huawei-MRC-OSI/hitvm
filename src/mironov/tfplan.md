@@ -66,23 +66,23 @@ TensorFlow Contribution plan
 So far, MRC OSI team have experience in the following topics:
 
 |Skill|Level of expertize|
-|-|-|-|
+|-|-|
 | Automatic Differentition | high |
 | LLVM code generation | high |
 | TVM architecture     | high |
 | OpenCL/Vulcan        | medium |
 | TVM AutoTuner        | low |
 | Quantizatoin         | low |
- 
+
 We are going use available skills to enter the TensorFlow development via exploring XLA compiler as the most familiar to us.
 The plan is shown below:
 
-| Project | Contribution point | Date |
-|-|-|-|
-| TensorFlow | Fix minor problems | Jan 2019 |
-| XLA | Fix issues related to running models on Mobile devices | Jan 2019 |
-| XLA | Inveestigating level of Vulcan support | Feb 2019 |
-| XLA | Fix issues related to OpenCL/ROCm | Feb 2019 |
-| TensorFlow/XLA | <ul><li>Investigation of TVM-TF integration issues</li><li>Applying Automatic differentiation in TVM-TF integration</li></ul> | March 2019 |
+| Project | Contribution point | Date | Approx. number of contributions to TensorFlow |
+|-|-|-|-|
+| TensorFlow | Fix minor issues | Jan 2019 | 5 |
+| XLA | Fix issues related to running models on Mobile devices | Jan 2019 | 2 |
+| XLA | Investigation of Vulcan support, fixing issues | Feb 2019 | 2 |
+| XLA | Fix issues related to OpenCL/ROCm | Feb 2019 | 1 |
+| TensorFlow/XLA | <ul><li>Investigation of TVM-TF integration issues</li><li>Applying Automatic differentiation in TVM-TF integration</li></ul> | March 2019 | 2 |
 
 
