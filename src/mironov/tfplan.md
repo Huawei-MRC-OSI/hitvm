@@ -80,10 +80,12 @@ The plan is shown below:
 | Project | Contribution point | Date |
 |-|-|-|
 | TensorFlow | Fix minor issues | Jan 2019 |
-| XLA | Fix issues related to running models on Mobile devices | Jan 2019 |
-| XLA | Fix issues related to OpenCL/ROCm | Feb 2019 |
-| XLA | Investigate of Vulcan support, fixing issues | Feb 2019 |
-| TensorFlow/XLA | <ul><li>Investigate of TVM-TF integration issues</li><li>Applying Automatic differentiation in TVM-TF integration</li></ul> | March 2019 |
+| XLA | Fix issues related to OpenCL/ROCm | Jan 2019 |
+| XLA | Fix issues related to running models on Mobile devices, if we have device with root access | Feb 2019 |
+| XLA | Investigate of Vulcan support, approach implementing codegen, fixing issues | March 2019 |
+| XLA | Investigate of Vulcan support, approach implementing codegen, fixing issues | March 2019 |
+| TensorFlow/TVM | Applying auto-tuner to optimize TVM-driven components, report to TF and TVM teams | March 2019 |
+| TensorFlow/TVM | <ul><li>Investigate of TVM-TF integration issues</li><li>Applying Automatic differentiation in TVM-TF integration</li></ul> | March 2019 |
 
 References
 * https://tvm.ai/2018/03/23/nmt-transformer-optimize.html
