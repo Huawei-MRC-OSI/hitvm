@@ -86,52 +86,12 @@ rec {
         . ~/.display
       fi
 
-      # See https://github.com/NixOS/nixpkgs/issues/38991
-      export LOCALE_ARCHIVE=${pkgs.glibcLocales}/lib/locale/locale-archive
-
-      export CWD=`pwd`
-
-      export TVM=$CWD/src/$USER/tvm
-      export BUILD=build-native
-      export PYTHONPATH="$CWD/src/$USER:$TVM/python:$TVM/topi/python:$TVM/nnvm/python:$PYTHONPATH"
-      export LD_LIBRARY_PATH="$TVM/$BUILD:$LD_LIBRARY_PATH"
-      export C_INCLUDE_PATH="$TVM/include:$TVM/3rdparty/dmlc-core/include:$TVM/3rdparty/HalideIR/src:$TVM/3rdparty/dlpack/include:$TVM/topi/include:$TVM/nnvm/include"
-      export CPLUS_INCLUDE_PATH="$C_INCLUDE_PATH"
-      export LIBRARY_PATH=$TVM/$BUILD
+      if test -f dockerenv.sh ; then
+        . dockerenv.sh
+      fi
 
       # Fix g++(v7.3): error: unrecognized command line option ‘-stdlib=libstdc++’; did you mean ‘-static-libstdc++’?
       unset NIX_CXXSTDLIB_LINK NIX_TARGET_CXXSTDLIB_LINK
-
-      cdc() { cd $CWD ;  }
-      cdtvm() { cd $TVM ; }
-
-      alias ipython="$CWD/ipython.sh"
-
-      nmake() {(
-        cdtvm
-        mkdir "$BUILD" 2>/dev/null
-        cp $TVM/cmake/config.cmake $TVM/$BUILD/config.cmake
-        sed -i 's/USE_LLVM OFF/USE_LLVM ON/g' $TVM/$BUILD/config.cmake
-        (
-          cd "$BUILD"
-          cmake ..
-          make "$@" -j6
-        ) && ln -sfv --no-dereference "$BUILD" build # FIXME: Python uses 'build' name
-      )}
-
-      nclean() {(
-        cdtvm
-        cd $BUILD
-        make clean
-        rm CMakeCache.txt
-        rm -rf CMakeFiles
-      )}
-
-      ntest() {(
-        cdtvm
-        sh ./tests/ci_build/ci_build.sh cpu ./tests/scripts/task_python_nnvm.sh
-      )}
-
     '';
   };
 

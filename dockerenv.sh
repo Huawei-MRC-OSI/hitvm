@@ -41,7 +41,7 @@ dmake() {(
   if test -n "$DMAKE_DEBUG" ; then
     echo 'set(CMAKE_BUILD_TYPE Debug)' >> $TVM/build-docker/config.cmake
   fi
-  ./tests/scripts/task_build.sh build-docker "$@" -j6
+  bash ./tests/scripts/task_build.sh build-docker "$@" -j6
   ln -f -s build-docker build # FIXME: Python uses 'build' name
 )}
 
