@@ -16,17 +16,21 @@ General
 ### Datasets
 
 * http://yann.lecun.com/exdb/mnist/
-  ?, MNIST
+  - ?, MNIST
 * https://www.cs.toronto.edu/~kriz/cifar.html
-  ?, CIFAR-10, CIFAR-100
+  - ?, CIFAR-10, CIFAR-100
 * https://catalog.ldc.upenn.edu/ldc99t42
-  ?, Penn Treebank v3
+  - ?, Penn Treebank v3
+* http://ai.stanford.edu/~amaas/data/sentiment/
+  - 2011, IMDB, Large Moview Review Dataset
 * https://www.microsoft.com/en-us/research/publication/mctest-challenge-dataset-open-domain-machine-comprehension-text/
-  2013, MCTest
+  - 2013, MCTest
 * https://nlp.stanford.edu/projects/glove/
-  2014, GloVe: Global Vectors for Word Representation
+  - 2014, GloVe: Global Vectors for Word Representation
+* http://www.cs.toronto.edu/~nitish/unsupervised_video/
+  - 2015, Moving MNIST Dataset
 * SQuAD, The Standford Question Answering Dataset
-  2018, https://rajpurkar.github.io/SQuAD-explorer/
+  - 2018, https://rajpurkar.github.io/SQuAD-explorer/
 
 ### Precision problem
 
