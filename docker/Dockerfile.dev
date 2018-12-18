@@ -24,7 +24,7 @@ RUN bash /install/ubuntu_install_keras.sh
 RUN pip3 install ipython jupyter
 RUN pip3 install 'tensorboard<=1.8'
 
-COPY install/proxy.sh /install/proxy.sh
+COPY proxy.sh /install/proxy.sh
 RUN bash /install/proxy.sh
 
 RUN apt-get install -y qt5-default libgl1-mesa-glx

@@ -26,14 +26,19 @@ test -z "$SUFFIX" && SUFFIX="dev"
 if test -f "$SUFFIX" ; then
   DOCKERFILE_PATH="$SUFFIX"
 else
-  DOCKERFILE_PATH="./Dockerfile.${SUFFIX}"
+  DOCKERFILE_PATH="./_docker/Dockerfile.${SUFFIX}"
 fi
 
 UID=`id --user`
 test -z "$NOPORT" && NOPORT=n
 test -z "$DOCKER_WORKSPACE" && DOCKER_WORKSPACE=`pwd`
 test -z "$DOCKER_COMMAND" && DOCKER_COMMAND="/bin/bash"
-DOCKER_CONTEXT_PATH="./src/$USER/tvm/docker"
+mkdir _docker 2>/dev/null || true
+rm -rf _docker/* 2>/dev/null || true
+cp -R ./src/$USER/tvm/docker/* ./_docker/
+cp -R ./docker/* ./_docker/
+#DOCKER_CONTEXT_PATH="./src/$USER/tvm/docker"
+DOCKER_CONTEXT_PATH="./_docker"
 
 if echo "$SUFFIX" | grep -q gpu ; then
   CONTAINER_TYPE=gpu
