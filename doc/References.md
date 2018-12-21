@@ -297,6 +297,8 @@ TVM
 
 * https://arxiv.org/pdf/1805.08166.pdf
   Learning to Optimize Tensor Programs
+* http://opentuner.org/
+  OpenTuner: an extensible framework for program autotuning
 
 ### General
 
