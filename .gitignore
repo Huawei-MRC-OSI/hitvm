@@ -11,3 +11,6 @@ _docker/
 tags
 data/*
 tvm-mironov
+*.log
+venv/
+saved_*/
