@@ -57,6 +57,8 @@ Articles:
   2018, Quantizing deep convolutional networks for efficient inference: A whitepaper
 * https://arxiv.org/ftp/arxiv/papers/1802/1802.02615.pdf <br/>
   2018, Effective Quantization Approaches for Recurrent Neural Networks
+* http://timdettmers.com/2018/12/16/deep-learning-hardware-guide/
+  TODO
 
 Tasks by classes
 ----------------
