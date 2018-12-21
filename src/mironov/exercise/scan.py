@@ -13,12 +13,9 @@ def sample1():
   m = 5
   n = 5
   X = tvm.placeholder((m, n), name="X")
-  s_state = tvm.placeholder((m, n), name='state')
-  s_init = tvm.compute((1, n), lambda _, i: X[0, i], name='init')
-  s_update = tvm.compute((m, n), lambda t, i: s_state[t-1,i] + X[t,i], name='update')
-  R = tvm.scan(s_init, s_update, s_state, X, name='scan')
+  s_init = tvm.compute((1, n), lambda _, i: tvm.trace([X])[0, i], name='init')
   return run_tvm(0,1,
     { X:1*np.ones((5,5)).astype(np.float32) },
-    R,
+    s_init,
     debug=True)
 
