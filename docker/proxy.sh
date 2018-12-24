@@ -157,6 +157,7 @@ echo "export HTTP_PROXY=$http_proxy"
 echo "export HTTPS_PROXY=$https_proxy"
 echo "export GRADLE_OPTS='-Dorg.gradle.daemon=false -Dandroid.builder.sdkDownload=true -Dorg.gradle.jvmargs=-Xmx2048M -Dhttp.proxyHost=$PROXY_HOST -Dhttp.proxyPort=$PROXY_PORT -Dhttps.proxyHost=$PROXY_HOST -Dhttps.proxyPort=$PROXY_PORT'"
 echo "export MAVEN_OPTS='-Dhttps.proxyHost=$PROXY_HOST -Dhttps.proxyPort=$PROXY_PORT -Dmaven.wagon.http.ssl.insecure=true'"
+echo "export no_proxy=localhost,127.0.0.0,127.0.1.1,127.0.1.1,.huawei.com"
 } >>/etc/profile
 
 echo ca_certificate=/etc/ssl/certs/ca-certificates.crt >> /etc/wgetrc
