@@ -17,20 +17,14 @@ Overall procedure
         $ git clone --recursive https://http://code.huawei.com/mrc-cbg-opensource/hitvm
         $ cd hitvm
 
-  3. Enter the development environment
+  3. Run the docker with `./rundocker.sh` script
+  
+  4. Within docker, source `. dockerenv.sh` script which define builder help functions.
+  
+  5. Within docker, build the project (usually `dmake -j10`) and run ipython for
+     futher development.
 
-     The build hook (see `default.nix`) will set up the environment.
-
-        $ nix-shell
-
-     Important tasks such as `make`, `clean` and `test` are wrapped with shell
-     functions. See `shell` expression defined in `default.nix` for details.
-
-  4. Build the project using either docker, or directly using `cmake` build
-     system, as described in [Official manual](https://docs.tvm.ai/install/index.html).
-
-  5. Use TVM as a library to build and test solutions
-
+Below we describe build procedure and other development tasks in more details.
 
 Building the TVM/NNVM
 =====================
