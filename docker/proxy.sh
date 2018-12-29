@@ -160,6 +160,11 @@ echo "export MAVEN_OPTS='-Dhttps.proxyHost=$PROXY_HOST -Dhttps.proxyPort=$PROXY_
 echo "export no_proxy=localhost,127.0.0.0,127.0.1.1,127.0.1.1,.huawei.com"
 } >>/etc/profile
 
+{
+echo "Defaults        env_keep += \"http_proxy HTTP_PROXY https_proxy HTTPS_PROXY no_proxy GRADLE_OPTS MAVEN_OPTS\""
+} >>/etc/sudoers
+
+
 echo ca_certificate=/etc/ssl/certs/ca-certificates.crt >> /etc/wgetrc
 
 mkdir /root/.android/
