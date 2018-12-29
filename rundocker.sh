@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# Uncomment to debug
-set -x
-
 while test -n "$1" ; do
   case "$1" in
     -h|--help)
-      echo "Usage: $0 [--noport] [SUFFIX]" >&2
+      echo "Usage: $0 [--map-sockets] [--noproxy] [--nvidia|--nv] [SUFFIX]" >&2
       exit 1
       ;;
     --map-sockets)
@@ -15,6 +12,9 @@ while test -n "$1" ; do
     --noproxy)
       NOPROXY=y
       ;;
+    --nvidia|--nv)
+      NVIDIA=y
+      ;;
     *)
       SUFFIX="$1"
       ;;
@@ -22,71 +22,67 @@ while test -n "$1" ; do
   shift
 done
 
+set -x -e
+
 test -z "$SUFFIX" && SUFFIX="dev"
 if test -f "$SUFFIX" ; then
   DOCKERFILE_PATH="$SUFFIX"
+  SUFFIX=`echo "$DOCKERFILE_PATH" | sed 's/.*\.//'`
 else
   DOCKERFILE_PATH="./_docker/Dockerfile.${SUFFIX}"
 fi
 
-UID=`id --user`
-test -z "$NOPORT" && NOPORT=n
+RUNDOCKER_UID=`id --user`
+DOCKER_CONTEXT_PATH="./_docker"
 test -z "$DOCKER_WORKSPACE" && DOCKER_WORKSPACE=`pwd`
 test -z "$DOCKER_COMMAND" && DOCKER_COMMAND="/bin/bash"
 mkdir _docker 2>/dev/null || true
 rm -rf _docker/* 2>/dev/null || true
 cp -R ./src/$USER/tvm/docker/* ./_docker/
 cp -R ./docker/* ./_docker/
-#DOCKER_CONTEXT_PATH="./src/$USER/tvm/docker"
-DOCKER_CONTEXT_PATH="./_docker"
+# FIXME: Prepare Dockerfile.dev from Dockerfile.ci_cpu rather then use our own version
 
-if echo "$SUFFIX" | grep -q gpu ; then
-  CONTAINER_TYPE=gpu
+# Prepare GPU docker from template
+cp ./_docker/Dockerfile.ci_gpu ./_docker/Dockerfile.gpu
+
+if test "$NOPROXY" != "y" ; then
+  if test -n "$http_proxy" ; then
+    # FIXME: JAVA_HOME is not set, so Java certs remain unitialized
+    sed -i '/FROM.*/a \
+      COPY proxy.sh /install/proxy.sh \
+      RUN bash /install/proxy.sh' ./_docker/Dockerfile.gpu
+  fi
+fi
+
+if test "$NVIDIA" = "y" -o "$SUFFIX" = "gpu" ; then
   DOCKER_BINARY="nvidia-docker"
 else
-  CONTAINER_TYPE=cpu
   DOCKER_BINARY="docker"
 fi
 
-DOCKER_IMG_NAME=$(echo "hitvm.${CONTAINER_TYPE}" | sed -e 's/=/_/g' -e 's/,/-/g' | tr '[:upper:]' '[:lower:]')
+DOCKER_IMG_NAME="hitvm_$SUFFIX"
 
 if test -z "$DOCKER_PROXY_ARGS" ; then
   if test -n "$https_proxy" ; then
     PROXY_HOST=`echo $https_proxy | sed 's@.*//\(.*\):.*@\1@'`
     PROXY_PORT=`echo $https_proxy | sed 's@.*//.*:\(.*\)@\1@'`
     DOCKER_PROXY_ARGS="--build-arg=http_proxy=$https_proxy --build-arg=https_proxy=$https_proxy --build-arg=ftp_proxy=$https_proxy"
-
-    echo "Setting up proxy.sh"
-    cp proxy.sh "$DOCKER_CONTEXT_PATH/install/"
-  else
-    echo "Using empty proxy.sh"
-    touch "$DOCKER_CONTEXT_PATH/install/proxy.sh"
   fi
 fi
-
-for f in _dist/* ; do
-  echo "$DOCKER_CONTEXT_PATH/`basename $f` -> $f"
-  ln $f $DOCKER_CONTEXT_PATH 2>/dev/null
-done
 
 docker build ${DOCKER_PROXY_ARGS} -t ${DOCKER_IMG_NAME} \
   -f "${DOCKERFILE_PATH}" "${DOCKER_CONTEXT_PATH}"
 
-if [[ $? != "0" ]]; then
-  echo "ERROR: docker build failed."
-  exit 1
-fi
-
-# Remap detach to Ctrl+e,e
-mkdir /tmp/docker-$UID || true
-cat >/tmp/docker-$UID/config.json <<EOF
+echo "Remap Docker detach action to Ctrl+e,e"
+mkdir /tmp/docker-$RUNDOCKER_UID || true
+cat >/tmp/docker-$RUNDOCKER_UID/config.json <<EOF
 { "detachKeys": "ctrl-e,e" }
 EOF
-DOCKER_CFG="--config /tmp/docker-$UID"
+DOCKER_CFG="--config /tmp/docker-$RUNDOCKER_UID"
 
 if test "$MAPSOCKETS" = "y"; then
-  PORT_TENSORBOARD=`expr 6000 + $UID - 1000`
-  PORT_JUPYTER=`expr 8000 + $UID - 1000`
+  PORT_TENSORBOARD=`expr 6000 + $RUNDOCKER_UID - 1000`
+  PORT_JUPYTER=`expr 8000 + $RUNDOCKER_UID - 1000`
   DOCKER_PORT_ARGS="-p 0.0.0.0:$PORT_TENSORBOARD:6006 -p 0.0.0.0:$PORT_JUPYTER:8888"
   echo
   echo "*****************************"
@@ -111,6 +107,3 @@ ${DOCKER_BINARY} $DOCKER_CFG run --rm --pid=host \
   bash --login ./src/$USER/tvm/docker/with_the_same_user \
   ${DOCKER_COMMAND}
 
-  # -e "MAVEN_OPTS=-Dhttps.proxyHost=$PROXY_HOST -Dhttps.proxyPort=$PROXY_PORT -Dmaven.wagon.http.ssl.insecure=true" \
-  # -e "http_proxy=$http_proxy" \
-  # -e "https_proxy=$https_proxy" \
