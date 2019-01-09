@@ -60,6 +60,12 @@ Articles:
 * http://timdettmers.com/2018/12/16/deep-learning-hardware-guide/
   TODO
 
+
+### Polyhedral
+
+* https://arxiv.org/pdf/1802.04730.pdf
+* https://lirias.kuleuven.be/retrieve/361209
+
 Tasks by classes
 ----------------
 
