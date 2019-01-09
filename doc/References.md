@@ -230,11 +230,13 @@ Models by classes
 Media:
 
 * https://towardsdatascience.com/understanding-2d-dilated-convolution-operation-with-examples-in-numpy-and-tensorflow-with-d376b3972b25
-  Dilated convolution
+  - Dilated convolution
+* https://petewarden.com/2015/04/20/why-gemm-is-at-the-heart-of-deep-learning/
+  - 2015, Why GEMM is at the heart of deep learning
 * https://www.oreilly.com/ideas/visualizing-convolutional-neural-networks
-  2017, Visualizing convolutional neural networks
+  - 2017, Visualizing convolutional neural networks
 * https://towardsdatascience.com/intuitively-understanding-convolutions-for-deep-learning-1f6f42faee1
-  2018, Shafkat, Intuitively Understanding Convolutions for Deep Learning
+  - 2018, Shafkat, Intuitively Understanding Convolutions for Deep Learning
 
 Articles:
 
