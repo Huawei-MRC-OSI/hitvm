@@ -57,6 +57,7 @@ rec {
       clang_6
       openblas
       tig
+      protobuf
     ]) ++ (with pypkgs; [
       Keras
       tensorflow
