@@ -65,6 +65,7 @@ Articles:
 
 * https://arxiv.org/pdf/1802.04730.pdf
 * https://lirias.kuleuven.be/retrieve/361209
+* https://www.seas.upenn.edu/~nimits/papers/sas16.pdf
 
 Tasks by classes
 ----------------
