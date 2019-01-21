@@ -63,9 +63,20 @@ Articles:
 
 ### Polyhedral
 
+#### General
+
 * https://arxiv.org/pdf/1802.04730.pdf
 * https://lirias.kuleuven.be/retrieve/361209
 * https://www.seas.upenn.edu/~nimits/papers/sas16.pdf
+
+#### TensorEngine
+
+* https://hal.inria.fr/hal-01751823/document
+  - Modeling the conflicting demands of parallelism and Temporal/Spatial locality in affine scheduling
+* http://www.cs.kuleuven.be/publicaties/rapporten/cw/CW706.pdf
+  - Scheduling for PPCG
+* http://www.csa.iisc.ernet.in/~cplse/papers/ukbr-pact-14-1.pdf
+  - Tiling and Optimizing Time-Iterated Computations over Periodic Domains
 
 Tasks by classes
 ----------------
