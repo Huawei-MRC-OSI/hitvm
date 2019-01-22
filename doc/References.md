@@ -65,14 +65,17 @@ Articles:
 
 #### General
 
+* https://pdfs.semanticscholar.org/3d64/988b882541afa8f03f912229fbba49c82e74.pdf
+  - 2012, Polly - Performing polyhedral optimizations on a low-level intermediate representation
 * http://pluto-compiler.sourceforge.net/
   - Pluto compiler
-* https://arxiv.org/pdf/1802.04730.pdf
-  - 2018, Tensor Comprehensions: Framework-Agnostic High-Performance Machine Learning Abstractions
 * https://lirias.kuleuven.be/retrieve/361209
   - 2016, Presburger Formulas and Polyhedral Compilation
 * https://www.seas.upenn.edu/~nimits/papers/sas16.pdf
   - 2016, Loopy: Programmable and Formally Verified Loop Transformations
+  - Uses polly internally
+* https://arxiv.org/pdf/1802.04730.pdf
+  - 2018, Tensor Comprehensions: Framework-Agnostic High-Performance Machine Learning Abstractions
 
 #### TensorEngine
 
