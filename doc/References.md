@@ -65,6 +65,9 @@ Articles:
 
 #### General
 
+* https://dl.acm.org/citation.cfm?id=1375595
+  - 2008, A practical automatic polyhedral parallelizer and locality optimizer
+  - Describes popular Pluto algorithm
 * https://pdfs.semanticscholar.org/3d64/988b882541afa8f03f912229fbba49c82e74.pdf
   - 2012, Polly - Performing polyhedral optimizations on a low-level intermediate representation
 * http://pluto-compiler.sourceforge.net/
@@ -77,7 +80,7 @@ Articles:
 * https://arxiv.org/pdf/1802.04730.pdf
   - 2018, Tensor Comprehensions: Framework-Agnostic High-Performance Machine Learning Abstractions
 
-#### TensorEngine
+#### Found in TensorEngine's doc folder
 
 * https://hal.inria.fr/hal-01751823/document
   - Modeling the conflicting demands of parallelism and Temporal/Spatial locality in affine scheduling
