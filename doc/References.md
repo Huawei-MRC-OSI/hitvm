@@ -77,8 +77,11 @@ Articles:
 * https://www.seas.upenn.edu/~nimits/papers/sas16.pdf
   - 2016, Loopy: Programmable and Formally Verified Loop Transformations
   - Uses polly internally
+* https://www.reservoir.com/wp-content/uploads/2017/08/RStreamTF.pdf
+  - 2017 Polyhedral Optimization of TensorFlow Computation Graphs (RstreamRT commercial?)
 * https://arxiv.org/pdf/1802.04730.pdf
   - 2018, Tensor Comprehensions: Framework-Agnostic High-Performance Machine Learning Abstractions
+
 
 #### Found in TensorEngine's doc folder
 
