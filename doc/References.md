@@ -83,6 +83,8 @@ Articles:
   - 2017 Polyhedral Optimization of TensorFlow Computation Graphs (RstreamRT commercial?)
 * https://arxiv.org/pdf/1802.04730.pdf
   - 2018, Tensor Comprehensions: Framework-Agnostic High-Performance Machine Learning Abstractions
+* https://arxiv.org/pdf/1804.10694.pdf
+  - 2018, TIRAMISU: A Polyhedral Compiler for Expressing Fast and Portable Code
 
 
 #### Found in TensorEngine's doc folder
