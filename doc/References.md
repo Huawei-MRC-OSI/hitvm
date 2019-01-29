@@ -55,6 +55,8 @@ Articles:
   Integer-Arithmetic-Only Inference
 * https://arxiv.org/pdf/1806.08342.pdf <br/>
   2018, Quantizing deep convolutional networks for efficient inference: A whitepaper
+* https://arxiv.org/pdf/1808.04752.pdf <br/>
+  2018, A Survey on Methods and Theories of Quantized Neural Networks
 * https://arxiv.org/ftp/arxiv/papers/1802/1802.02615.pdf <br/>
   2018, Effective Quantization Approaches for Recurrent Neural Networks
 * http://timdettmers.com/2018/12/16/deep-learning-hardware-guide/
