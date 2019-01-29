@@ -397,7 +397,14 @@ TVM
 
 * https://github.com/Tencent/PocketFlow
   PocketFlow, a kind of Autotuner for TF?
-
+  
+* https://github.com/Tiramisu-Compiler/tiramisu
+  - Tiramisu, Polyhedral compiler
+  - Not mentioned:
+    + Autodiff
+    + Quantization
+    + Python API
+    
 ### Benchmarks
 
 * https://github.com/dmlc/tvm/wiki/Benchmark
