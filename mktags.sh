@@ -1,19 +1,18 @@
 #!/bin/sh
 
 if ! test -d "$CWD" ; then
-  echo "CWD is not set"
+  echo "CWD is not set. Did you source dockerenv.sh?"
   exit 1
 fi
 
-cd "$CWD"
-find -H src/$USER -name '*cc' -or -name '*hpp' -or -name '*\.h' -or -name '*\.c' -or -name '*cpp' | \
+cd $CWD
+find src tvm -name '*cc' -or -name '*hpp' -or -name '*h' -or -name '*\.c' -or -name '*cpp' | \
   ctags -L - --excmd=number --c++-kinds=+p --fields=+iaS --extras=+q --language-force=C++
 
 while test -n "$1" ; do
   case "$1" in
     py)
-      find -H src/$USER -name '*py' | \
-      ctags --excmd=number --append -L -
+      find tvm src -name '*py' | ctags --excmd=number --append -L -
       ;;
     tf)
       echo "Building Tensorflow tags" >&2
@@ -28,3 +27,4 @@ while test -n "$1" ; do
   esac
   shift
 done
+
