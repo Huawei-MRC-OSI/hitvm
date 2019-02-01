@@ -6,7 +6,7 @@ if ! test -d "$CWD" ; then
 fi
 
 cd $CWD
-find src tvm -name '*cc' -or -name '*hpp' -or -name '*h' -or -name '*\.c' -or -name '*cpp' | \
+find src/$USER/tvm -name '*cc' -or -name '*hpp' -or -name '*h' -or -name '*\.c' -or -name '*cpp' | \
   ctags -L - --excmd=number --c++-kinds=+p --fields=+iaS --extras=+q --language-force=C++
 
 while test -n "$1" ; do
