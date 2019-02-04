@@ -11,7 +11,7 @@ all: \
 	$(B)/syr2k.ll.run \
 
 CLANG=../polly/llvm_build/bin/clang
-
+# CLANG=clang
 
 $(B)/floyd_warshall.gen: floyd_warshall.cpp
 	mkdir -p $(@D) || true
@@ -25,10 +25,10 @@ $(B)/syr2k.gen: syr2k.cpp syr2k.hpp
 	g++ -std=c++14  $< -ltvm -o $@
 
 $(B)/syr2k.s: $(B)/syr2k.gen
-	$^ asm >$@ 2>/dev/null
+	$^ asm >$@ 2>$(B)/syr2k.asm.ir
 
 $(B)/syr2k.ll: $(B)/syr2k.gen
-	$^ ll >$@ 2>/dev/null
+	$^ ll >$@ 2>$(B)/syr2k.ll.ir
 
 $(B)/syr2k.s.so: $(B)/syr2k.s
 	g++ -O3 -c -o $(B)/syr2k.o $^

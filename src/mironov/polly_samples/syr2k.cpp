@@ -12,6 +12,11 @@
 #include "syr2k.hpp"
 
 using namespace std;
+using topi::operator+;
+using topi::operator-;
+using topi::operator*;
+using topi::operator/;
+using topi::operator%;
 
 int main(int argc, char **argv)
 {
@@ -50,12 +55,35 @@ int main(int argc, char **argv)
       return tvm::sum( A(j,k)*Alpha*B(i,k) + B(j,k)*Alpha*A(i,k), {k});
       }),"C2");
 
-  tvm::Tensor C3 = tvm::compute(shape_C, tvm::FCompute([=](auto axis){
-      return C1(axis) + C2(axis);
-      }),"C3");
+  tvm::IterVar C2_i=C2->op->root_iter_vars()[0];
+  tvm::IterVar C2_j=C2->op->root_iter_vars()[1];
+
+  tvm::Tensor C3 = C1 + C2;
+  tvm::IterVar C3_i=C3->op->root_iter_vars()[0];
+  tvm::IterVar C3_j=C3->op->root_iter_vars()[1];
 
   /* Prepare a lowered func */
   tvm::Schedule s = tvm::create_schedule({C3->op});
+
+#if 0
+  {
+    tvm::Stage C2_st = s[C2->op];
+    // tvm::Stage C3_st = s[C3->op];
+
+    tvm::IterVar i,j;
+    i=C2_i; j=C2_j;
+    // C3_st.fuse({C3_i,C2_i}, &i);
+    // C3_st.fuse({C3_j,C2_j}, &j);
+
+    C2_st.reorder({i,j,k});
+    tvm::IterVar i1,i2,j1,j2,k1,k2;
+    C2_st.split(i,32,&i1,&i2);
+    C2_st.split(j,32,&j1,&j2);
+    C2_st.split(k,32,&k1,&k2);
+  }
+#endif
+
+
   tvm::BuildConfig config = tvm::build_config();
   std::unordered_map<tvm::Tensor, tvm::Buffer> binds;
   auto lowered = tvm::lower(s, {C3}, "syr2k", binds, config);
