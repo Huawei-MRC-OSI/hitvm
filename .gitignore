@@ -1,13 +1,7 @@
 result
 .*
 *pyc
-_tags/
-_logs/
-_dist/
-_jupyter/
-_build/
-_debug/
-_docker/
+_*/
 tags
 data/*
 tvm-mironov
