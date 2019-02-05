@@ -12,7 +12,7 @@ find src/$USER/tvm -name '*cc' -or -name '*hpp' -or -name '*h' -or -name '*\.c' 
 while test -n "$1" ; do
   case "$1" in
     py)
-      find tvm src -name '*py' | ctags --excmd=number --append -L -
+      find src/$USER/tvm -name '*py' | ctags --excmd=number --append -L -
       ;;
     tf)
       echo "Building Tensorflow tags" >&2
