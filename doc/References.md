@@ -96,6 +96,11 @@ Articles:
 * http://www.csa.iisc.ernet.in/~cplse/papers/ukbr-pact-14-1.pdf
   - Tiling and Optimizing Time-Iterated Computations over Periodic Domains
 
+### TPU and HW accelerators
+
+* https://arxiv.org/pdf/1810.09868.pdf
+  - 2018, AUTOMATIC FULL COMPILATION OF JULIA PROGRAMS AND ML MODELS TO CLOUD TPUS
+
 Tasks by classes
 ----------------
 
