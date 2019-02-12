@@ -59,6 +59,8 @@ Articles:
   2018, A Survey on Methods and Theories of Quantized Neural Networks
 * https://arxiv.org/ftp/arxiv/papers/1802/1802.02615.pdf <br/>
   2018, Effective Quantization Approaches for Recurrent Neural Networks
+* https://arxiv.org/pdf/1702.03044.pdf <br/>
+  2017, Incremental Network Quantization: Towards Lossless CNNs with Low-Precision Weights
 * http://timdettmers.com/2018/12/16/deep-learning-hardware-guide/
   TODO
 
