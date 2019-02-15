@@ -53,6 +53,8 @@ Articles:
 * https://arxiv.org/pdf/1712.05877.pdf <br/>
   2017, Quantization and Training of Neural Networks for Efficient
   Integer-Arithmetic-Only Inference
+* https://arxiv.org/pdf/1702.03044.pdf
+  - Incremental network quantization: towards lossless cnns with low-precision weights
 * https://arxiv.org/pdf/1806.08342.pdf <br/>
   2018, Quantizing deep convolutional networks for efficient inference: A whitepaper
 * https://arxiv.org/pdf/1808.04752.pdf <br/>
