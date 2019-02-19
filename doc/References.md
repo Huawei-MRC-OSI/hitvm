@@ -398,9 +398,6 @@ TVM
 * https://software.intel.com/en-us/openvino-toolkit
   OpenVINO (Intel)
 
-* https://arxiv.org/pdf/1804.10694.pdf
-  2018, Tiramisu: A Code Optimization Framework for High Performance Systems
-
 * https://github.com/xiaomi/mace
   2018, MACE is a deep learning inference framework optimized for mobile heterogeneous computing platforms
 
@@ -409,6 +406,8 @@ TVM
   
 * https://github.com/Tiramisu-Compiler/tiramisu
   - Tiramisu, Polyhedral compiler
+  - https://arxiv.org/pdf/1804.10694.pdf
+    + 2018, Tiramisu: A Code Optimization Framework for High Performance Systems
   - Not mentioned:
     + Autodiff
     + Quantization
