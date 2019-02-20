@@ -31,6 +31,8 @@ General
   - 2015, Moving MNIST Dataset
 * SQuAD, The Standford Question Answering Dataset
   - 2018, https://rajpurkar.github.io/SQuAD-explorer/
+* Places 365
+  - http://places2.csail.mit.edu
 
 ### Precision problem
 
