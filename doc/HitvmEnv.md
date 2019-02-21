@@ -153,17 +153,20 @@ produce a core file:
 
 Reference: https://le.qun.ch/en/blog/core-dump-file-in-docker/
 
-Debugging python scripts
-------------------------
+Using the debugger
+------------------
 
  1. Recently we added `--debug` argument to `dmake`. It enables building TVM with
     debug information
         
         $ dmake --debug -j20
 
- 2. Run your faulty script like this:
+ 2. To run your faulty python script:
  
         $ gdb  --args `which python3.6` lstm2.py
+
+ 3. Hints on using GDB:
+    - `gdb -tui` or `(gdb) tui enable` opens ncurses UI.
 
 AddressSanitizer (aka ASan) for TVM
 -----------------------------------
