@@ -4,7 +4,7 @@ S1 = scheduling0
 SM = sigmoid
 
 .PHONY: all clean
-all: $(B)/$(N1).gen $(B)/$(S1).gen $(B)/$(SM).gen
+all: $(B)/$(N1).gen $(B)/$(S1).gen $(B)/$(SM).gen $(B)/cuda.gen
 
 $(B)/$(N1).gen: $(N1).cpp
 	mkdir -p $(B) || true
@@ -20,6 +20,11 @@ $(B)/$(SM).gen: $(SM).cpp
 	mkdir -p $(B) || true
 	g++ -std=c++14  $(SM).cpp -ltvm -o $(B)/$(SM).gen
 	$(B)/$(SM).gen > $(B)/$(SM).s
+
+$(B)/cuda.gen: cuda.cpp
+	mkdir -p $(B) || true
+	g++ -std=c++14  $< -ltvm -o $@
+	$@ cuda
 
 clean:
 	rm -rf $(B)

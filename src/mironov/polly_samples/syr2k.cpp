@@ -84,19 +84,46 @@ int main(int argc, char **argv)
 #endif
 
 
-  tvm::BuildConfig config = tvm::build_config();
-  std::unordered_map<tvm::Tensor, tvm::Buffer> binds;
-  auto lowered = tvm::lower(s, {C3}, "syr2k", binds, config);
-
-  /* Output IR dump to stderr */
-  cerr << lowered[0]->body << endl;
-
-  auto target = tvm::Target::create("llvm");
-  auto target_host = tvm::Target::create("llvm");
-  tvm::runtime::Module mod = tvm::build(lowered, target, target_host, config);
-
   /* Output LLVM assembly to stdout */
-  cout << mod->GetSource(argv[1]) << endl;
+  if(std::string(argv[1]) == "cuda") {
+    tvm::BuildConfig config = tvm::build_config();
+    std::unordered_map<tvm::Tensor, tvm::Buffer> binds;
+    auto lowered = tvm::lower(s, {C3}, "syr2k", binds, config);
+
+    tvm::IterVar block_idx = tvm::thread_axis(tvm::Range(), "blockIdx.x");
+    tvm::IterVar thread_idx = tvm::thread_axis(tvm::Range(), "threadIdx.x");
+
+    s[C3].bind(C3_i, block_idx);
+    s[C3].bind(C3_j, thread_idx);
+
+    /* Output IR dump to stderr */
+    cerr << lowered[0]->body << endl;
+
+    tvm::Target target = tvm::Target::create("cuda");
+    tvm::Target target_host = tvm::Target::create("llvm");
+    tvm::runtime::Module mod = tvm::build(lowered, target, target_host, config);
+
+    mod->SaveToFile(std::string(argv[0]) + ".cuda", "cuda");
+  }
+  else {
+    tvm::BuildConfig config = tvm::build_config();
+    std::unordered_map<tvm::Tensor, tvm::Buffer> binds;
+    auto lowered = tvm::lower(s, {C3}, "syr2k", binds, config);
+
+    /* Output IR dump to stderr */
+    cerr << lowered[0]->body << endl;
+
+    tvm::Target target = tvm::Target::create("llvm");
+    tvm::Target target_host = tvm::Target::create("llvm");
+    tvm::runtime::Module mod = tvm::build(lowered, target, target_host, config);
+
+    if(std::string(argv[1]) == "obj") {
+      mod->SaveToFile(std::string(argv[0]) + ".obj", "obj");
+    }
+    else {
+      cout << mod->GetSource(argv[1]) << endl;
+    }
+  }
   return 0;
 }
 
