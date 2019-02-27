@@ -415,6 +415,9 @@ TVM
     + Quantization
     + Python API
     
+ * http://eyeriss.mit.edu/
+   - CNN enegry-efficient optimizations, by MIT
+    
 ### Benchmarks
 
 * https://github.com/dmlc/tvm/wiki/Benchmark
