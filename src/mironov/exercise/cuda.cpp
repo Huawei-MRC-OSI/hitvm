@@ -31,6 +31,10 @@ int main(int argc, char **argv)
   /* Output IR dump to stderr */
   cerr << lowered[0]->body << endl;
 
+
+  /* tvm::IterVar block_idx = tvm::IterVarNode::make(tvm::Range(), tvm::Var("blockIdx.x"), tvm::kThreadIndex, "blockIdx.x"); */
+  /* tvm::IterVar thread_idx = tvm::IterVarNode::make(tvm::Range(), tvm::Var("threadIdx.x"), tvm::kThreadIndex, "threadIdx.x"); */
+
   tvm::IterVar block_idx = tvm::thread_axis(tvm::Range(), "blockIdx.x");
   tvm::IterVar thread_idx = tvm::thread_axis(tvm::Range(), "threadIdx.x");
 
