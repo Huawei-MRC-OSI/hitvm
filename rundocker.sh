@@ -14,6 +14,7 @@ while test -n "$1" ; do
       ;;
     --nvidia|--nv)
       NVIDIA=y
+      SUFFIX=gpu
       ;;
     *)
       SUFFIX="$1"
@@ -42,7 +43,7 @@ cp -R ./src/$USER/tvm/docker/* ./_docker/
 cp -R ./docker/* ./_docker/
 # FIXME: Prepare Dockerfile.dev from Dockerfile.ci_cpu rather then use our own version
 
-# Prepare GPU docker from template
+# Prepare GPU docker from the template
 cp ./_docker/Dockerfile.ci_gpu ./_docker/Dockerfile.gpu
 
 if test "$NOPROXY" != "y" ; then
