@@ -13,6 +13,7 @@ all: \
 	$(B)/syr2k.obj.run \
 	$(B)/syr2k.cuda
 
+LLVM_LIBS=$(shell ../polly/llvm_build/bin/llvm-config --libs)
 
 CLANG=../polly/llvm_build/bin/clang
 # CLANG=clang
@@ -26,7 +27,7 @@ $(B)/floyd_warshall.s: $(B)/floyd_warshall.gen
 
 $(B)/syr2k.gen: syr2k.cpp syr2k.hpp
 	mkdir -p $(@D) || true
-	g++ -g -O0 -std=c++14  $< -ltvm -o $@
+	g++ -g -O0 -std=c++14  $< -ltvm -lPolly -L../polly/llvm_build/lib -Wl,--start-group -ltvm $(LLVM_LIBS) -lPolly -lPollyISL -Wl,--end-group -o $@
 
 # ASM
 
