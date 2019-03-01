@@ -26,8 +26,8 @@ if ! test -d ${CLANG_SRC}; then
     git clone http://llvm.org/git/clang.git ${CLANG_SRC}
 fi
 
-ln -s $POLLY_SRC $POLLY_DST
-ln -s $CLANG_SRC $CLANG_DST
+ln -f -s $POLLY_SRC $POLLY_DST
+ln -f -s $CLANG_SRC $CLANG_DST
 
 mkdir -p ${LLVM_BUILD}
 cd ${LLVM_BUILD}

@@ -88,13 +88,14 @@ int main(int argc, char **argv)
   if(std::string(argv[1]) == "cuda") {
     tvm::BuildConfig config = tvm::build_config();
     std::unordered_map<tvm::Tensor, tvm::Buffer> binds;
-    auto lowered = tvm::lower(s, {C3}, "syr2k", binds, config);
 
     tvm::IterVar block_idx = tvm::thread_axis(tvm::Range(), "blockIdx.x");
     tvm::IterVar thread_idx = tvm::thread_axis(tvm::Range(), "threadIdx.x");
 
     s[C3].bind(C3_i, block_idx);
     s[C3].bind(C3_j, thread_idx);
+
+    auto lowered = tvm::lower(s, {C3}, "syr2k", binds, config);
 
     /* Output IR dump to stderr */
     cerr << lowered[0]->body << endl;
@@ -103,7 +104,7 @@ int main(int argc, char **argv)
     tvm::Target target_host = tvm::Target::create("llvm");
     tvm::runtime::Module mod = tvm::build(lowered, target, target_host, config);
 
-    mod->SaveToFile(std::string(argv[0]) + ".cuda", "cuda");
+    mod->SaveToFile(std::string(argv[0]) + ".obj", "obj");
   }
   else {
     tvm::BuildConfig config = tvm::build_config();

@@ -26,10 +26,6 @@ int main(int argc, char **argv)
   tvm::Schedule s = tvm::create_schedule({C->op});
   tvm::BuildConfig config = tvm::build_config();
   std::unordered_map<tvm::Tensor, tvm::Buffer> binds;
-  auto lowered = tvm::lower(s, {A,B,C}, "vecadd", binds, config);
-
-  /* Output IR dump to stderr */
-  cerr << lowered[0]->body << endl;
 
 
   /* tvm::IterVar block_idx = tvm::IterVarNode::make(tvm::Range(), tvm::Var("blockIdx.x"), tvm::kThreadIndex, "blockIdx.x"); */
@@ -43,11 +39,17 @@ int main(int argc, char **argv)
   s[C].bind(i, block_idx);
   s[C].bind(j, thread_idx);
 
+  auto lowered = tvm::lower(s, {A,B,C}, "vecadd", binds, config);
+
+  /* Output IR dump to stderr */
+  cerr << lowered[0]->body << endl;
+
   /* Output IR dump to stderr */
   tvm::Target target = tvm::target::cuda();
   tvm::Target target_host = tvm::target::llvm();
   tvm::runtime::Module mod = tvm::build(lowered, target, target_host, config);
-  mod->SaveToFile(std::string(argv[0]) + ".cuda", "cuda");
+  mod->SaveToFile(std::string(argv[0]) + ".o", "obj");
+
   return 0;
 }
 

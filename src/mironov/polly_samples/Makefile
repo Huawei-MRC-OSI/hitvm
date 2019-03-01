@@ -71,8 +71,8 @@ $(B)/syr2k.obj.run: syr2k_run.cpp $(B)/syr2k.obj.so syr2k.hpp
 # CUDA
 
 $(B)/syr2k.cuda: $(B)/syr2k.gen
-	$^ cuda >$@ 2>$(B)/syr2k.cuda.ir
-	mv $(B)/syr2k.cuda.obj $@
+	$^ cuda 2>$(B)/syr2k.cuda.ir
+	mv $(B)/syr2k.gen.obj $@
 
 # $(B)/syr2k.obj.so: $(B)/syr2k.cuda
 # 	g++ -shared -fPIC -o $@ $(B)/syr2k.obj
