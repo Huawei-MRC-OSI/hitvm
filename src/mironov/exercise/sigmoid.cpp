@@ -14,7 +14,7 @@ sigmoid.gen > sigmoid.s
 #include <tvm/tensor.h>
 #include <tvm/build_module.h>
 #include <tvm/ir.h>
-#include <tvm/ir_operator.h>
+/* #include <tvm/ir_operator.h> */
 #include <tvm/ir_mutator.h>
 #include <tvm/ir_pass.h>
 
