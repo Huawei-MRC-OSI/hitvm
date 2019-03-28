@@ -42,4 +42,4 @@ RUN apt-get install -y doxygen graphviz
 RUN pip3 install cpplint pylint mypy
 
 
-
+RUN apt-get install -y libxml2-dev
