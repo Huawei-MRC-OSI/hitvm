@@ -65,6 +65,8 @@ Articles:
   2018, Effective Quantization Approaches for Recurrent Neural Networks
 * https://arxiv.org/pdf/1702.03044.pdf <br/>
   2017, Incremental Network Quantization: Towards Lossless CNNs with Low-Precision Weights
+* https://arxiv.org/pdf/1903.01061.pdf <br/>
+  2019, Learning low-precision neural networks without Straight-Through Estimator (STE)
 * http://timdettmers.com/2018/12/16/deep-learning-hardware-guide/
   TODO
 
