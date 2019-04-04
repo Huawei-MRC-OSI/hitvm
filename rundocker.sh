@@ -65,6 +65,12 @@ sed -i '/RUN bash .install.ubuntu_install_java.sh.*/a \
   COPY proxy-environment.sh /install/proxy-environment.sh \
   RUN bash /install/proxy-environment.sh' ./_docker/Dockerfile.ci_gpu
 
+for pkg in onnx caffe2 vulcan redis antlr nnpack; do
+  sed -i "s@RUN bash /install/ubuntu_install_$pkg.sh@# RUN bash /install/ubuntu_install_$pkg.sh@g" ./_docker/Dockerfile.ci_gpu
+done
+
+sed -i "s@RUN bash /install/ubuntu_install_vulkan.sh@# RUN bash /install/ubuntu_install_vulkan.sh@g" ./_docker/Dockerfile.ci_gpu
+
 if test "$NVIDIA" = "y" ; then
   DOCKER_BINARY="nvidia-docker"
 else
