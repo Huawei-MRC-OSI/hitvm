@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 
+if which nvidia-docker >/dev/null; then
+  echo "Using NVIDIA mode by default"
+  NVIDIA=y
+  SUFFIX=ci_gpu
+else
+  echo "Using CPU mode by default"
+fi
+
 while test -n "$1" ; do
   case "$1" in
     -h|--help)
-      echo "Usage: $0 [--map-sockets] [--noproxy] [--nvidia|--nv] [SUFFIX]" >&2
+      echo "Usage: $0 [--map-sockets] [--noproxy] [--[no-]nvidia|--nv] [SUFFIX]" >&2
       exit 1
       ;;
     --map-sockets)
@@ -14,7 +22,11 @@ while test -n "$1" ; do
       ;;
     --nvidia|--nv)
       NVIDIA=y
-      SUFFIX=gpu
+      SUFFIX=ci_gpu
+      ;;
+    --no-nvidia)
+      NVIDIA=n
+      SUFFIX=cpu
       ;;
     *)
       SUFFIX="$1"
@@ -26,6 +38,7 @@ done
 set -x -e
 
 test -z "$SUFFIX" && SUFFIX="dev"
+test -z "$NVIDIA" && NVIDIA="n"
 if test -f "$SUFFIX" ; then
   DOCKERFILE_PATH="$SUFFIX"
   SUFFIX=`echo "$DOCKERFILE_PATH" | sed 's/.*\.//'`
@@ -41,21 +54,18 @@ mkdir _docker 2>/dev/null || true
 rm -rf _docker/* 2>/dev/null || true
 cp -R ./src/$USER/tvm/docker/* ./_docker/
 cp -R ./docker/* ./_docker/
-# FIXME: Prepare Dockerfile.dev from Dockerfile.ci_cpu rather then use our own version
 
-# Prepare GPU docker from the template
-cp ./_docker/Dockerfile.ci_gpu ./_docker/Dockerfile.gpu
+# FIXME: Patch Dockerfile.ci_cpu like we do for ci_gpu, rather than use Dockerfile.dev by defaule
 
-if test "$NOPROXY" != "y" ; then
-  if test -n "$http_proxy" ; then
-    # FIXME: JAVA_HOME is not set, so Java certs remain unitialized
-    sed -i '/FROM.*/a \
-      COPY proxy.sh /install/proxy.sh \
-      RUN bash /install/proxy.sh' ./_docker/Dockerfile.gpu
-  fi
-fi
+sed -i '/FROM.*/a \
+  COPY proxy-certificates.sh /install/proxy-certificates.sh \
+  RUN bash /install/proxy-certificates.sh' ./_docker/Dockerfile.ci_gpu
 
-if test "$NVIDIA" = "y" -o "$SUFFIX" = "gpu" ; then
+sed -i '/RUN bash .install.ubuntu_install_java.sh.*/a \
+  COPY proxy-environment.sh /install/proxy-environment.sh \
+  RUN bash /install/proxy-environment.sh' ./_docker/Dockerfile.ci_gpu
+
+if test "$NVIDIA" = "y" ; then
   DOCKER_BINARY="nvidia-docker"
 else
   DOCKER_BINARY="docker"

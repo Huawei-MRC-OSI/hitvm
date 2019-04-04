@@ -1,5 +1,8 @@
 FROM ubuntu:16.04
 
+COPY install/proxy-certificates.sh /install/proxy-certificates.sh
+RUN bash /install/proxy-certificates.sh
+
 RUN apt-get update --fix-missing
 
 RUN apt-get install -y unzip
@@ -22,8 +25,8 @@ RUN bash /install/ubuntu_install_keras.sh
 COPY install/ubuntu_install_llvm.sh /install/ubuntu_install_llvm.sh
 RUN bash /install/ubuntu_install_llvm.sh
 
-COPY install/proxy.sh /install/proxy.sh
-RUN bash /install/proxy.sh
+COPY install/proxy-environment.sh /install/proxy-environment.sh
+RUN bash /install/proxy-environment.sh
 
 COPY install/ubuntu_install_gradle.sh /install/ubuntu_install_gradle.sh
 RUN bash /install/ubuntu_install_gradle.sh
