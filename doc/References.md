@@ -7,11 +7,13 @@ General
 ### Books
 
 * http://neuralnetworksanddeeplearning.com/
-  2015, Neural Networks and Deep Learning book
+  - 2015, Neural Networks and Deep Learning book
 * https://github.com/janishar/mit-deep-learning-book-pdf/tree/master/complete-book-bookmarked-pdf
-  2017, MIT Deep Learning Book
+  - 2017, MIT Deep Learning Book
 * http://www.automl.org/book/
-  2018, AUTOML: METHODS, SYSTEMS, CHALLENGES (NEW BOOK)
+  - 2018, AUTOML: METHODS, SYSTEMS, CHALLENGES (NEW BOOK)
+* https://github.com/jacobeisenstein/gt-nlp-class/blob/master/notes/eisenstein-nlp-notes-10-15-2018.pdf
+  - 2018, Natural Language Processing 
 
 ### Datasets
 
