@@ -57,6 +57,9 @@ cp -R ./docker/* ./_docker/
 
 # FIXME: Patch Dockerfile.ci_cpu like we do for ci_gpu, rather than use Dockerfile.dev by defaule
 
+##
+## Patching GPU Dockerfile
+##
 sed -i '/FROM.*/a \
   COPY proxy-certificates.sh /install/proxy-certificates.sh \
   RUN bash /install/proxy-certificates.sh' ./_docker/Dockerfile.ci_gpu
@@ -65,11 +68,12 @@ sed -i '/RUN bash .install.ubuntu_install_java.sh.*/a \
   COPY proxy-environment.sh /install/proxy-environment.sh \
   RUN bash /install/proxy-environment.sh' ./_docker/Dockerfile.ci_gpu
 
-for pkg in onnx caffe2 vulcan redis antlr nnpack; do
-  sed -i "s@RUN bash /install/ubuntu_install_$pkg.sh@# RUN bash /install/ubuntu_install_$pkg.sh@g" ./_docker/Dockerfile.ci_gpu
+for pkg in onnx caffe2 vulkan redis antlr nnpack tflite; do
+  sed -i "s@\(RUN.*install_$pkg.sh\)@# \1@g" ./_docker/Dockerfile.ci_gpu
 done
 
-sed -i "s@RUN bash /install/ubuntu_install_vulkan.sh@# RUN bash /install/ubuntu_install_vulkan.sh@g" ./_docker/Dockerfile.ci_gpu
+sed -i "$ a \
+  RUN apt-get install -y libxml2-dev libedit-dev" ./_docker/Dockerfile.ci_gpu
 
 if test "$NVIDIA" = "y" ; then
   DOCKER_BINARY="nvidia-docker"

@@ -1,5 +1,10 @@
 #!/bin/bash -xe
 
+# Know to work:
+LLVM_REV="30d97334"
+CLANG_REV="18917301"
+POLLY_REV="0eda3be9"
+
 export BASE=`pwd`
 export LLVM_SRC=${BASE}/llvm
 POLLY_DST=${LLVM_SRC}/tools/polly
